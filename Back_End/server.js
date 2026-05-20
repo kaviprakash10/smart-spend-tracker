@@ -8,11 +8,10 @@ import path from "path";
 import cors from "cors";
 import cron from "node-cron";
 import { fileURLToPath } from "url";
-import ConfigureDB from "./config/db.js";
-import passport from "./config/passport.js";
 import authRoutes from "./app/routes/authRoutes.js";
 import expenseRoutes from "./app/routes/expenseRoutes.js";
-
+import passport from "./config/passport.js";
+import ConfigureDB from "./config/db.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

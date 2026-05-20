@@ -15,6 +15,9 @@ dist/
 build/
 .vite/
 
+# Ignore any uploads directories anywhere in the repo
+**/uploads/**
+
 # Environment variables
 .env
 .env.local
