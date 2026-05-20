@@ -1,9 +1,0 @@
-# Root .gitignore: global ignores for the repository
-
-# Ignore any uploads directories anywhere in the repo
-**/uploads/**
-
-# Node modules and common artifacts
-node_modules/
-dist/
-.env
