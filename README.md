@@ -124,4 +124,4 @@ Refer to those files for exact endpoints and payload formats.
 
 ## License
 
-This project is provided as-is. Add a license file if you want to make licensing explicit.
+This project is provided if for educational purposes only. 
