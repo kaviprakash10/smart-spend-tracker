@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser, reset } from "../store/authSlice";
 import { toast } from "react-toastify";
-import { Mail, Lock, User, Phone, ArrowRight, Shield, Zap, ShieldCheck, Loader2 } from "lucide-react";
-import axios from "axios";
+import { Mail, Lock, User, Phone, Shield, Zap } from "lucide-react";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,12 +12,6 @@ const Signup = () => {
     password: "",
     phone: "",
   });
-
-  const [otp, setOtp] = useState("");
-  const [showOTPField, setShowOTPField] = useState(false);
-  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  const [isSendingOTP, setIsSendingOTP] = useState(false);
-  const [isVerifyingOTP, setIsVerifyingOTP] = useState(false);
 
   const { name, email, password, phone } = formData;
   const navigate = useNavigate();
@@ -47,51 +40,12 @@ const Signup = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (!isPhoneVerified) {
-      toast.error("Please verify your phone number first");
-      return;
-    }
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
     const userData = { name, email, password, phone };
     dispatch(registerUser(userData));
-  };
-
-  const requestSignupOTP = async () => {
-    if (!phone) {
-      toast.warning("Please enter your phone number first");
-      return;
-    }
-    setIsSendingOTP(true);
-    try {
-      await axios.post("http://localhost:5050/api/auth/send-signup-otp", { phone });
-      toast.success("OTP Sent! Check your phone.");
-      setShowOTPField(true);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send OTP");
-    } finally {
-      setIsSendingOTP(false);
-    }
-  };
-
-  const verifySignupOTP = async () => {
-    if (!otp) {
-      toast.error("Please enter the OTP");
-      return;
-    }
-    setIsVerifyingOTP(true);
-    try {
-      await axios.post("http://localhost:5050/api/auth/verify-signup-otp", { phone, otp });
-      toast.success("Phone verified successfully!");
-      setIsPhoneVerified(true);
-      setShowOTPField(false);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid OTP");
-    } finally {
-      setIsVerifyingOTP(false);
-    }
   };
 
   const handleGoogleAuth = () => {
@@ -204,54 +158,12 @@ const Signup = () => {
                   name="phone"
                   type="tel"
                   required
-                  readOnly={isPhoneVerified}
-                  className={`w-full pl-12 ${isPhoneVerified ? "pr-12 bg-green-50" : "pr-24 bg-gray-50"} py-4 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium text-gray-900 outline-none placeholder-gray-400 sm:text-sm shadow-sm`}
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium text-gray-900 outline-none placeholder-gray-400 sm:text-sm shadow-sm"
                   placeholder="Phone Number"
                   value={phone}
                   onChange={onChange}
                 />
-                {!isPhoneVerified && !showOTPField && (
-                  <button
-                    type="button"
-                    onClick={requestSignupOTP}
-                    disabled={isSendingOTP || !phone}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-indigo-600 hover:text-indigo-500 disabled:text-gray-400 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition-colors"
-                  >
-                    {isSendingOTP ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Verify"}
-                  </button>
-                )}
-                {isPhoneVerified && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                )}
               </div>
-
-              {showOTPField && !isPhoneVerified && (
-                <div className="group relative animate-fade-in-up">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
-                    <ShieldCheck className="h-5 w-5" />
-                  </div>
-                  <input
-                    name="otp"
-                    type="text"
-                    required
-                    maxLength={6}
-                    className="w-full pl-12 pr-24 py-4 bg-indigo-50/50 border border-indigo-100 rounded-2xl focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium text-gray-900 outline-none placeholder-gray-400 sm:text-sm shadow-sm tracking-[0.3em]"
-                    placeholder="Enter OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={verifySignupOTP}
-                    disabled={isVerifyingOTP || otp.length < 6}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 px-3 py-1.5 rounded-lg transition-colors"
-                  >
-                    {isVerifyingOTP ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Verify Code"}
-                  </button>
-                </div>
-              )}
               <div className="group relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
                   <Lock className="h-5 w-5" />
