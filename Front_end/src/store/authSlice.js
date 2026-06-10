@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "https://smart-spend-tracker-backend.onrender.com/api/auth";
+const API_URL = "https://smart-spend-tracker-backend-fm2u.onrender.com/api/auth";
 
 // User Registration
 export const registerUser = createAsyncThunk(
